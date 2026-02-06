@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Jackson Hole Mountain Conditions</title>
+
+<style>
+:root {
+  --navy: #1f3a4d;
+  --blue: #5fa8d3;
+  --border: #cfdde7;
+  --text: #1f3a4d;
+  --muted: #5f7f95;
+}
+
+/* ===== PAGE BACKGROUND (THIS NOW WORKS) ===== */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  color: var(--text);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(244,248,251,0.55),
+      rgba(249,252,255,0.70)
+    ),
+    url("assets/mountains-bg.png");
+
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+
+  /* tuned visual polish */
+  filter: saturate(0.9) brightness(1.02);
+}
+
+
+/* ===== LAYOUT ===== */
+.screen {
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.logo {
+  height: 90px;
+  width: auto;
+  filter: drop-shadow(0 6px 14px rgba(31,58,77,0.18));
+}
+
+h1 {
+  font-size: 3.2rem;
+  margin: 0;
+  letter-spacing: 0.05em;
+  color: var(--navy);
+}
+
+/* ===== PANELS ===== */
+.panel {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.88),
+    rgba(246,250,252,0.96)
+  );
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow:
+    0 12px 30px rgba(31,58,77,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.panel::before {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 56px;
+  background: linear-gradient(90deg, var(--blue), var(--navy));
+  border-radius: 3px;
+  margin-bottom: 16px;
+}
+
+.label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.value {
+  font-size: 3.4rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.forecast {
+  font-size: 1.7rem;
+}
+
+/* ===== FOOTER ===== */
+.updated {
+  grid-column: span 2;
+  font-size: 1rem;
+  color: var(--muted);
+  text-align: right;
+}
+</style>
+</head>
+
+<body>
+<div class="screen" id="screen">Loading…</div>
+
+<script>
+async function loadData() {
+  try {
+    const res = await fetch("/data");
+    const d = await res.json();
+
+    document.getElementById("screen").innerHTML = `
+      <div class="header">
+        <img src="assets/hoback-club-logo.png" class="logo" alt="Hoback Club Logo">
+        <h1>Jackson Hole Conditions</h1>
+      </div>
+
+      <div class="panel">
+        <div class="label">Summit Base</div>
+        <div class="value">${d.summitBase}"</div>
+      </div>
+
+      <div class="panel">
+        <div class="label">Season Total</div>
+        <div class="value">${d.seasonTotal}"</div>
+      </div>
+
+      <div class="panel">
+        <div class="label">Lifts Open</div>
+        <div class="value">${d.lifts}</div>
+      </div>
+
+      <div class="panel">
+        <div class="label">Trails Open</div>
+        <div class="value">${d.trails}</div>
+      </div>
+
+      <div class="panel">
+        <div class="label">Current Summit Temp</div>
+        <div class="value">${d.summitTemp}</div>
+      </div>
+
+      <div class="panel forecast">
+        <div class="label">Today</div>
+        ${d.todayWeather}
+      </div>
+
+      <div class="updated">
+        Updated ${new Date(d.lastUpdated).toLocaleTimeString()}
+      </div>
+    `;
+  } catch (err) {
+    document.getElementById("screen").innerHTML =
+      "<h1>Conditions temporarily unavailable</h1>";
+    console.error(err);
+  }
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>

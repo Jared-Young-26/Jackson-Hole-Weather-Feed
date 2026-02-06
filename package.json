@@ -1,0 +1,26 @@
+{
+  "name": "jackson-hole-weather-feed",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jared-Young-26/Jackson-Hole-Weather-Feed.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Jared-Young-26/Jackson-Hole-Weather-Feed/issues"
+  },
+  "homepage": "https://github.com/Jared-Young-26/Jackson-Hole-Weather-Feed#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "fast-xml-parser": "^5.3.4"
+  }
+}
